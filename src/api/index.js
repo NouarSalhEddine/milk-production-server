@@ -1,11 +1,13 @@
 import { Router } from 'express'
 import cow from './cow'
 import medicalHistory from './medical_history'
+import birth from './birth'
 
 const router = new Router()
 
 router.use('/cows', cow)
 router.use('/medical_histories', medicalHistory)
+router.use('/births', birth)
 
 /**
  * @apiDefine master Master access only

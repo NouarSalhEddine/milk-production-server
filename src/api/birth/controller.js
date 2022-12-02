@@ -9,6 +9,7 @@ export const create = ({ bodymen: { body } }, res, next) =>
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
   Birth.find(query, select, cursor)
+    .populate('cow')
     .then((births) => births.map((birth) => birth.view()))
     .then(success(res))
     .catch(next);

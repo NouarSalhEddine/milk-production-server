@@ -1,25 +1,30 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose, { Schema } from "mongoose";
+import { MedicalHistory } from "../medical_history";
+import { Birth } from "../birth";
 
-const cowSchema = new Schema({
-  serial_number: {
-    type: String
+const cowSchema = new Schema(
+  {
+    serial_number: {
+      type: String,
+    },
+    entry_date: {
+      type: Date,
+    },
+    breed: {
+      type: String,
+    },
   },
-  entry_date: {
-    type: Date
-  },
-  breed: {
-    type: String
+  {
+    timestamps: true,
+    // toJSON: {
+    //   virtuals: true,
+    //   transform: (obj, ret) => { delete ret._id }
+    // }
   }
-}, {
-  timestamps: true,
-  // toJSON: {
-  //   virtuals: true,
-  //   transform: (obj, ret) => { delete ret._id }
-  // }
-})
+);
 
 cowSchema.methods = {
-  view (full) {
+  view(full) {
     const view = {
       // simple view
       id: this.id,
@@ -27,17 +32,25 @@ cowSchema.methods = {
       entry_date: new Date(this.entry_date),
       breed: this.breed,
       createdAt: this.createdAt,
-      updatedAt: this.updatedAt
-    }
+      updatedAt: this.updatedAt,
+    };
 
-    return full ? {
-      ...view
-      // add properties for a full view
-    } : view
-  }
-}
+    return full
+      ? {
+          ...view,
+          // add properties for a full view
+        }
+      : view;
+  },
+};
 
-const model = mongoose.model('Cow', cowSchema)
+cowSchema.pre("remove", function (next) {
+  MedicalHistory.remove({ cow: this._id }).exec();
+  Birth.remove({ cow: this._id }).exec();
+  next()
+});
 
-export const schema = model.schema
-export default model
+const model = mongoose.model("Cow", cowSchema);
+
+export const schema = model.schema;
+export default model;

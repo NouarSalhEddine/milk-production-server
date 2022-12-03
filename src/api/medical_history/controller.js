@@ -8,7 +8,7 @@ export const create = ({ bodymen: { body } }, res, next) =>
     .catch(next);
 
 export const index = ({ querymen: { query, select, cursor } }, res, next) =>
-  MedicalHistory.find(query, select, cursor)
+  MedicalHistory.find(query, select, cursor).populate("cow")
     .then((medicalHistories) =>
       medicalHistories.map((medicalHistory) => medicalHistory.view())
     )

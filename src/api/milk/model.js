@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose'
 
 const milkSchema = new Schema({
   production_date: {
-    type: String
+    type: Date
   },
   quantity: {
     type: String
